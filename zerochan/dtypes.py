@@ -28,7 +28,6 @@ class ZeroChanImage:
 
 @dataclass
 class ZeroChanPage:
-    category: ZeroChanCategory
     images: List[ZeroChanImage]
     page: int
     max_page: int

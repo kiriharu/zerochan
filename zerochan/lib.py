@@ -4,11 +4,11 @@ import requests
 from bs4 import BeautifulSoup
 import json
 
-from zerochan.types import (
+from dtypes import (
     PictureSize, ZeroChanCategory,
     ZeroChanImage, ZeroChanPage, SortBy
 )
-from zerochan.exceptions import NoPicturesFound
+from exceptions import NoPicturesFound
 
 
 class ZeroChan:
@@ -46,8 +46,20 @@ class ZeroChan:
         ))
         return self
 
-    def _parse_category(self, soup) -> ZeroChanCategory:
-        page_data = json.loads("".join(soup.find("script", {"type": "application/ld+json"}).contents))
+    def _get_soup(self):
+        req = requests.get(
+            f"{self.WEBSITE_URL}/{self._tag}",
+            params=self.req_args,
+            cookies=self.cookies
+        )
+        return BeautifulSoup(req.content, "html.parser")
+
+    def category(self) -> ZeroChanCategory:
+        soup = self._get_soup()
+        content_el = soup.find("script", {"type": "application/ld+json"})
+        if content_el is None:
+            raise NoPicturesFound
+        page_data = json.loads("".join(content_el.contents))
         menu = soup.find("div", dict(id="menu"))
         # parsing description
         p_tags = menu.find_all("p")
@@ -79,14 +91,8 @@ class ZeroChan:
             )
         return images
 
-    def parse(self) -> ZeroChanPage:
-        req = requests.get(
-            f"{self.WEBSITE_URL}/{self._tag}",
-            params=self.req_args,
-            cookies=self.cookies
-        )
-        soup = BeautifulSoup(req.content)
-        category = self._parse_category(soup)
+    def pics(self) -> ZeroChanPage:
+        soup = self._get_soup()
         pics_soup = soup.find("ul", dict(id="thumbs2"))
         if pics_soup is None:
             raise NoPicturesFound
@@ -102,7 +108,6 @@ class ZeroChan:
             page = int(str_list[1])
             max_page = int(str_list[3])
         return ZeroChanPage(
-            category=category,
             images=imgs,
             page=page,
             max_page=max_page
