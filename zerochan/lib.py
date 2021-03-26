@@ -8,7 +8,7 @@ from dtypes import (
     PictureSize, ZeroChanCategory,
     ZeroChanImage, ZeroChanPage, SortBy
 )
-from exceptions import NoPicturesFound
+from c_exceptions import NoPicturesFound
 
 
 class ZeroChan:
@@ -17,7 +17,7 @@ class ZeroChan:
     # TODO: filter by image size by pixel, alt and other
 
     def __init__(self):
-        self._tag = ""
+        self._search = ""
         self._page = 1
         self._sort_by = SortBy.LAST
         self._size = PictureSize.ALL_SIZES
@@ -38,8 +38,8 @@ class ZeroChan:
         self._page = page_num
         return self
 
-    def tag(self, title: str) -> 'ZeroChan':
-        self._tag = title
+    def search(self, title: str) -> 'ZeroChan':
+        self._search = title
         return self
 
     def authorize(self, z_hash: str, z_id: str):
@@ -49,18 +49,17 @@ class ZeroChan:
         ))
         return self
 
-    def _get_soup(self):
+    def _get_soup(self) -> BeautifulSoup:
         self.req_args.update(dict(
             p=self._page,
             s=self._sort_by,
             d=int(self._size)
         ))
         req = requests.get(
-            f"{self.WEBSITE_URL}/{self._tag}",
+            f"{self.WEBSITE_URL}/{self._search}",
             params=self.req_args,
             cookies=self.cookies
         )
-        #print(req.url)
         return BeautifulSoup(req.content, "html.parser")
 
     def category(self) -> ZeroChanCategory:
@@ -80,7 +79,7 @@ class ZeroChan:
             description=description
         )
 
-    def _parse_pics(self, pics_soup) -> List[ZeroChanImage]:
+    def _parse_pics(self, pics_soup: BeautifulSoup) -> List[ZeroChanImage]:
         images = []
         for pic in pics_soup.find_all("li"):
             if getattr(pic.a, "img") is None:
