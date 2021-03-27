@@ -14,6 +14,11 @@ Library for Zerochan.net with pics parsing and downloader included!
 ### Using poetry
 `poetry add zerochan`
 
+## Using as downloader tool:
+
+After install you can call zerochan by command `python -m zerochan`
+
+
 ## Using as library: 
 
 First, you should create `Zerochan` instance:
