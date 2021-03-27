@@ -1,14 +1,14 @@
+import json
 from typing import List
 
 import requests
 from bs4 import BeautifulSoup
-import json
 
-from dtypes import (
+from .c_exceptions import NoPicturesFound
+from .dtypes import (
     PictureSize, ZeroChanCategory,
     ZeroChanImage, ZeroChanPage, SortBy
 )
-from c_exceptions import NoPicturesFound
 
 
 class ZeroChan:

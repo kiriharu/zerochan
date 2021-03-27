@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "zerochan"
-version = "0.2.0"
+version = "0.3.0"
 description = "Python library and download cli util for https://www.zerochan.net"
 readme = "README.md"
 keywords = ["zerochan", "booru", "parser", "util", "pics "]

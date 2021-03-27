@@ -1,10 +1,12 @@
-from dtypes import SortBy, PictureSize
-from lib import ZeroChan
-from c_exceptions import NoPicturesFound
 import argparse
 import datetime
 import os
+
 import requests
+
+from .c_exceptions import NoPicturesFound
+from .dtypes import SortBy, PictureSize
+from .lib import ZeroChan
 
 PICS_DIR = os.path.join(os.getcwd(), "zerochan_pics")
 
