@@ -121,8 +121,8 @@ class ZeroChan:
                 page = int(str_list[1])
                 max_page = int(str_list[3])
             else:
-                page = int(str_list[4])
-                max_page = int(str_list[6])
+                page = int(str_list[3])
+                max_page = int(str_list[5])
         return ZeroChanPage(
             images=imgs,
             page=page,
